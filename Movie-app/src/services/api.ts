@@ -9,7 +9,7 @@ const api = axios.create({
 
 export const getPopularMovies = () => {
   return api.get<{ results: Movie[] }>(
-    `/movie/popular?api_key=${API_KEY}`
+    `/movie/popular?api_key=${API_KEY}&language=en-US`
   );
 };
 
@@ -21,6 +21,6 @@ export const searchMovies = (query: string) => {
 
 export const getMovieDetails = (id: string | number) => {
   return api.get<Movie>(
-    `/movie/${id}?api_key=${API_KEY}`
+    `/movie/${id}?api_key=${API_KEY}&language=en-US`
   );
 };

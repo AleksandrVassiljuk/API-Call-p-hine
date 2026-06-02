@@ -12,14 +12,18 @@ function Favorites() {
   const [favorites, setFavorites] = useState<Movie[]>([]);
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("favorites") || "[]");
-    setFavorites(data);
+    const data = localStorage.getItem("favorites");
+    setFavorites(data ? JSON.parse(data) : []);
   }, []);
+
+  const saveToStorage = (items: Movie[]) => {
+    localStorage.setItem("favorites", JSON.stringify(items));
+  };
 
   const removeFavorite = (id: number) => {
     const updated = favorites.filter((movie) => movie.id !== id);
     setFavorites(updated);
-    localStorage.setItem("favorites", JSON.stringify(updated));
+    saveToStorage(updated);
   };
 
   const clearAll = () => {
@@ -39,10 +43,11 @@ function Favorites() {
       {/* HEADER */}
       <div className="d-flex justify-content-between align-items-center mb-2">
 
-        <h2>⭐ Your Favorite Movies</h2>
-
-        <div className="text-muted small">
-          {favorites.length} movie(s) saved
+        <div>
+          <h2>⭐ Favorites</h2>
+          <small className="text-muted">
+            {favorites.length} movie(s) saved
+          </small>
         </div>
 
         {favorites.length > 0 && (
@@ -57,17 +62,17 @@ function Favorites() {
       </div>
 
       <p className="text-muted mb-3">
-        Your personal movie collection saved in browser storage.
+        Your personal movie collection stored in your browser.
       </p>
 
       {/* EMPTY STATE */}
-      {favorites.length === 0 && (
+      {favorites.length === 0 ? (
         <div className="text-center mt-5">
 
           <h3>😢 No favorites yet</h3>
 
           <p className="text-muted">
-            Start exploring movies and click ❤️ to build your collection.
+            Go back to home and click ❤️ on movies you like.
           </p>
 
           <Link to="/" className="btn btn-primary mt-2">
@@ -75,62 +80,61 @@ function Favorites() {
           </Link>
 
         </div>
-      )}
+      ) : (
+        <div className="row">
 
-      {/* GRID */}
-      <div className="row">
+          {favorites.map((movie) => (
+            <div className="col-md-3 col-sm-6 mb-4" key={movie.id}>
 
-        {favorites.map((movie) => (
-          <div className="col-md-3 col-sm-6 mb-4" key={movie.id}>
+              <div className="card h-100 shadow-sm">
 
-            <div className="card h-100 shadow-sm favorite-card">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  className="card-img-top"
+                  alt={movie.title}
+                />
 
-              <img
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                className="card-img-top favorite-img"
-                alt={movie.title}
-              />
+                <div className="card-body d-flex flex-column">
 
-              <div className="card-body d-flex flex-column">
+                  <h5 className="card-title text-truncate" title={movie.title}>
+                    {movie.title}
+                  </h5>
 
-                <h5 className="card-title text-truncate" title={movie.title}>
-                  {movie.title}
-                </h5>
+                  <p className="text-muted small mb-1">
+                    Saved from TMDb
+                  </p>
 
-                <p className="text-muted small mb-1">
-                  Saved from TMDb
-                </p>
+                  <p className="text-warning mb-2">
+                    ⭐ {movie.vote_average?.toFixed(1) || "N/A"}
+                  </p>
 
-                <p className="text-warning mb-2">
-                  ⭐ {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
-                </p>
+                  <div className="mt-auto d-flex gap-2">
 
-                <div className="mt-auto d-flex gap-2">
+                    <Link
+                      to={`/movie/${movie.id}`}
+                      className="btn btn-primary btn-sm flex-fill"
+                    >
+                      Details
+                    </Link>
 
-                  <Link
-                    to={`/movie/${movie.id}`}
-                    className="btn btn-primary btn-sm flex-fill"
-                  >
-                    Details
-                  </Link>
+                    <button
+                      className="btn btn-outline-danger btn-sm"
+                      onClick={() => removeFavorite(movie.id)}
+                    >
+                      Remove
+                    </button>
 
-                  <button
-                    className="btn btn-outline-danger btn-sm"
-                    onClick={() => removeFavorite(movie.id)}
-                  >
-                    Remove
-                  </button>
+                  </div>
 
                 </div>
 
               </div>
 
             </div>
+          ))}
 
-          </div>
-        ))}
-
-      </div>
+        </div>
+      )}
 
     </div>
   );

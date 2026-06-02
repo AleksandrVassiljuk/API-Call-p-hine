@@ -9,14 +9,18 @@ import Favorites from "./pages/Favorites";
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
+      <div className="app-wrapper">
+        <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/movie/:id" element={<Details />} />
-        <Route path="/favorites" element={<Favorites />} />
-      </Routes>
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/movie/:id" element={<Details />} />
+            <Route path="/favorites" element={<Favorites />} />
+          </Routes>
+        </main>
+      </div>
     </BrowserRouter>
   );
 }

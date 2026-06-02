@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getPopularMovies } from "../services/api";
 import MovieCard from "../components/MovieCard";
 import type { Movie } from "../types/Movie";
@@ -8,26 +8,29 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const res = await getPopularMovies();
-        setMovies(res.data.results);
-      } catch (err) {
-        console.log("Error loading movies", err);
-        setError("Failed to load movies. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchMovies = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-    fetchMovies();
+      const res = await getPopularMovies();
+      setMovies(res.data.results || []);
+    } catch (err) {
+      setError("Failed to load movies. Please try again later.");
+      setMovies([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchMovies();
+  }, [fetchMovies]);
 
   const addToFavorites = (movie: Movie) => {
     const favs: Movie[] = JSON.parse(localStorage.getItem("favorites") || "[]");
 
-    if (!favs.find((m) => m.id === movie.id)) {
+    if (!favs.some((m) => m.id === movie.id)) {
       favs.push(movie);
       localStorage.setItem("favorites", JSON.stringify(favs));
     }
@@ -40,7 +43,7 @@ function Home() {
       <h2>🎬 Popular Movies</h2>
 
       <p className="text-muted mb-3">
-        Discover trending movies from TMDb. View details or save them to your favorites.
+        Discover trending movies from TMDb. View details or save them to favorites.
       </p>
 
       {/* ERROR */}
@@ -50,7 +53,7 @@ function Home() {
         </div>
       )}
 
-      {/* CONTENT STATES */}
+      {/* STATES */}
       {loading ? (
         <div className="text-center mt-4">
           <p>⏳ Loading movies...</p>
@@ -59,7 +62,7 @@ function Home() {
         <div className="text-center mt-4">
           <h4>😢 No movies found</h4>
           <p className="text-muted">
-            Try refreshing or check your internet connection.
+            Try refreshing the page or check your internet connection.
           </p>
         </div>
       ) : (
@@ -68,6 +71,13 @@ function Home() {
             <small className="text-muted">
               Showing {movies.length} popular movies
             </small>
+
+            <button
+              className="btn btn-outline-secondary btn-sm"
+              onClick={fetchMovies}
+            >
+              Refresh
+            </button>
           </div>
 
           <div className="row">
