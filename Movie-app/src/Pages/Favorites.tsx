@@ -23,6 +23,12 @@ function Favorites() {
   };
 
   const clearAll = () => {
+    const confirmClear = window.confirm(
+      "Are you sure you want to remove all favorites?"
+    );
+
+    if (!confirmClear) return;
+
     setFavorites([]);
     localStorage.removeItem("favorites");
   };
@@ -32,7 +38,12 @@ function Favorites() {
 
       {/* HEADER */}
       <div className="d-flex justify-content-between align-items-center mb-2">
+
         <h2>⭐ Your Favorite Movies</h2>
+
+        <div className="text-muted small">
+          {favorites.length} movie(s) saved
+        </div>
 
         {favorites.length > 0 && (
           <button
@@ -42,11 +53,11 @@ function Favorites() {
             Clear all
           </button>
         )}
+
       </div>
 
       <p className="text-muted mb-3">
-        Here you can find all movies you saved. Data is stored locally in your
-        browser (localStorage).
+        Your personal movie collection saved in browser storage.
       </p>
 
       {/* EMPTY STATE */}
@@ -56,8 +67,7 @@ function Favorites() {
           <h3>😢 No favorites yet</h3>
 
           <p className="text-muted">
-            You haven’t saved any movies yet. Go back to home and click ❤️ on
-            movies you like.
+            Start exploring movies and click ❤️ to build your collection.
           </p>
 
           <Link to="/" className="btn btn-primary mt-2">
@@ -83,19 +93,16 @@ function Favorites() {
 
               <div className="card-body d-flex flex-column">
 
-                <h5
-                  className="card-title text-truncate"
-                  title={movie.title}
-                >
+                <h5 className="card-title text-truncate" title={movie.title}>
                   {movie.title}
                 </h5>
 
                 <p className="text-muted small mb-1">
-                  🎬 Saved movie from TMDb collection
+                  Saved from TMDb
                 </p>
 
                 <p className="text-warning mb-2">
-                  ⭐ Rating: {movie.vote_average?.toFixed(1) || "N/A"}
+                  ⭐ {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
                 </p>
 
                 <div className="mt-auto d-flex gap-2">
@@ -104,7 +111,7 @@ function Favorites() {
                     to={`/movie/${movie.id}`}
                     className="btn btn-primary btn-sm flex-fill"
                   >
-                    🔍 Details
+                    Details
                   </Link>
 
                   <button

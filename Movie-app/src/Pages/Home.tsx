@@ -6,6 +6,7 @@ import type { Movie } from "../types/Movie";
 function Home() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -14,6 +15,7 @@ function Home() {
         setMovies(res.data.results);
       } catch (err) {
         console.log("Error loading movies", err);
+        setError("Failed to load movies. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -38,30 +40,46 @@ function Home() {
       <h2>🎬 Popular Movies</h2>
 
       <p className="text-muted mb-3">
-        Discover trending and popular movies from TMDb. Click on a movie to
-        view details or save it to your favorites list.
+        Discover trending movies from TMDb. View details or save them to your favorites.
       </p>
 
-      {/* CONTENT */}
+      {/* ERROR */}
+      {error && (
+        <div className="alert alert-danger">
+          {error}
+        </div>
+      )}
+
+      {/* CONTENT STATES */}
       {loading ? (
-        <p>⏳ Loading movies, please wait...</p>
+        <div className="text-center mt-4">
+          <p>⏳ Loading movies...</p>
+        </div>
       ) : movies.length === 0 ? (
         <div className="text-center mt-4">
           <h4>😢 No movies found</h4>
           <p className="text-muted">
-            Try refreshing the page or check your internet connection.
+            Try refreshing or check your internet connection.
           </p>
         </div>
       ) : (
-        <div className="row">
-          {movies.map((m) => (
-            <MovieCard
-              key={m.id}
-              movie={m}
-              onFavorite={addToFavorites}
-            />
-          ))}
-        </div>
+        <>
+          <div className="d-flex justify-content-between align-items-center mb-2">
+            <small className="text-muted">
+              Showing {movies.length} popular movies
+            </small>
+          </div>
+
+          <div className="row">
+            {movies.map((m) => (
+              <MovieCard
+                key={m.id}
+                movie={m}
+                onFavorite={addToFavorites}
+              />
+            ))}
+          </div>
+        </>
       )}
 
     </div>

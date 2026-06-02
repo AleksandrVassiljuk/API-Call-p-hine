@@ -6,12 +6,10 @@ function Navbar() {
 
       <div className="container">
 
-        {/* Brand / Logo */}
         <Link className="navbar-brand fw-bold" to="/">
           🎬 MovieApp
         </Link>
 
-        {/* Mobile toggle */}
         <button
           className="navbar-toggler"
           type="button"
@@ -21,35 +19,34 @@ function Navbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Menu */}
         <div className="collapse navbar-collapse" id="navbarNav">
 
-          <ul className="navbar-nav ms-auto">
+          <ul className="navbar-nav ms-auto gap-3">
 
             <li className="nav-item">
               <Link className="nav-link" to="/">
                 🏠 Home
-                <small className="d-block text-muted" style={{ fontSize: "10px" }}>
+                <span className="d-block text-muted small">
                   Popular movies
-                </small>
+                </span>
               </Link>
             </li>
 
             <li className="nav-item">
               <Link className="nav-link" to="/search">
                 🔎 Search
-                <small className="d-block text-muted" style={{ fontSize: "10px" }}>
-                  Find any movie
-                </small>
+                <span className="d-block text-muted small">
+                  Find movies fast
+                </span>
               </Link>
             </li>
 
             <li className="nav-item">
               <Link className="nav-link" to="/favorites">
                 ❤️ Favorites
-                <small className="d-block text-muted" style={{ fontSize: "10px" }}>
+                <span className="d-block text-muted small">
                   Saved movies
-                </small>
+                </span>
               </Link>
             </li>
 

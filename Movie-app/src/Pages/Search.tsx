@@ -32,6 +32,7 @@ function Search() {
 
     } catch (err) {
       setError("Failed to search movies. Please try again.");
+      setMovies([]);
     } finally {
       setLoading(false);
     }
@@ -46,18 +47,32 @@ function Search() {
     }
   };
 
+  const clearSearch = () => {
+    setQuery("");
+    setMovies([]);
+    setError("");
+  };
+
   return (
     <div className="container mt-4">
 
-      {/* HEADER */}
-      <h2>🔎 Search Movies</h2>
+      <div className="d-flex justify-content-between align-items-center">
+        <h2>🔎 Search Movies</h2>
+
+        {query && (
+          <button
+            className="btn btn-outline-secondary btn-sm"
+            onClick={clearSearch}
+          >
+            Clear
+          </button>
+        )}
+      </div>
 
       <p className="text-muted mb-3">
-        Search for any movie from TMDb database. Results will appear instantly
-        as you type.
+        Search for movies from the TMDb database and discover new titles.
       </p>
 
-      {/* INPUT */}
       <input
         className="form-control"
         placeholder="Type movie name..."
@@ -65,23 +80,42 @@ function Search() {
         onChange={(e) => setQuery(e.target.value)}
       />
 
-      {/* STATUS */}
-      {loading && (
-        <p className="mt-3">⏳ Searching movies...</p>
-      )}
-
-      {error && (
-        <p className="text-danger mt-3">{error}</p>
-      )}
-
-      {/* EMPTY STATE */}
-      {!loading && query && movies.length === 0 && (
-        <p className="mt-3 text-muted">
-          No results found for "{query}"
+      {!query && (
+        <p className="text-muted mt-3">
+          Start typing to search for movies.
         </p>
       )}
 
-      {/* RESULTS */}
+      {loading && (
+        <p className="mt-3">
+          ⏳ Searching movies...
+        </p>
+      )}
+
+      {error && (
+        <p className="text-danger mt-3">
+          {error}
+        </p>
+      )}
+
+      {!loading && movies.length > 0 && (
+        <p className="text-muted mt-3">
+          Found {movies.length} movies.
+        </p>
+      )}
+
+      {!loading && query && movies.length === 0 && !error && (
+        <div className="mt-3">
+          <p className="text-muted">
+            No results found for "{query}"
+          </p>
+
+          <small className="text-muted">
+            Try searching for Avatar, Batman, Spider-Man or Avengers.
+          </small>
+        </div>
+      )}
+
       <div className="row mt-3">
         {movies.map((m) => (
           <MovieCard
