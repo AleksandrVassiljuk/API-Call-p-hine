@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { Movie } from "../types/Movie";
 
-const API_KEY = import.meta.env.VITE_API_KEY as string;
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 const api = axios.create({
   baseURL: "https://api.themoviedb.org/3",
