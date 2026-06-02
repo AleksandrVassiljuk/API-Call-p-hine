@@ -1,26 +1,25 @@
-const API_KEY = "1dc3689c8de4873fb37ccc2a4fea1e17";
-const BASE_URL = "https://api.themoviedb.org/3";
+import axios from "axios";
+import type { Movie } from "../types/Movie";
 
-// 🎥 POPULAR FILMS
-export async function getPopularMovies() {
-  const res = await fetch(
-    `${BASE_URL}/movie/popular?api_key=${API_KEY}`
-  );
-  return res.json();
-}
+const API_TOKEN = import.meta.env.VITE_API_TOKEN as string;
 
-// 🔍 SEARCH
-export async function searchMovies(query: string) {
-  const res = await fetch(
-    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}`
-  );
-  return res.json();
-}
+const api = axios.create({
+  baseURL: "https://api.themoviedb.org/3",
+  headers: {
+    Authorization: `Bearer ${API_TOKEN}`,
+  },
+});
 
-// 🎬 DETAILS
-export async function getMovieDetails(id: string) {
-  const res = await fetch(
-    `${BASE_URL}/movie/${id}?api_key=${API_KEY}`
+export const getPopularMovies = () => {
+  return api.get<{ results: Movie[] }>("/movie/popular");
+};
+
+export const searchMovies = (q: string) => {
+  return api.get<{ results: Movie[] }>(
+    `/search/movie?query=${encodeURIComponent(q)}`
   );
-  return res.json();
-}
+};
+
+export const getMovieDetails = (id: string | number) => {
+  return api.get<Movie>(`/movie/${id}`);
+};

@@ -3,28 +3,22 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Search from "./pages/Search";
-import Favorites from "./pages/Favorites";
 import Details from "./pages/Details";
+import Favorites from "./pages/Favorites";
 
-export default function App() {
+function App() {
   return (
     <BrowserRouter>
-      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        
-        {/* NAVBAR */}
-        <Navbar />
+      <Navbar />
 
-        {/* MAIN CONTENT */}
-        <main style={{ flex: 1, padding: "20px" }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/details/:id" element={<Details />} />
-          </Routes>
-        </main>
-
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/movie/:id" element={<Details />} />
+        <Route path="/favorites" element={<Favorites />} />
+      </Routes>
     </BrowserRouter>
   );
 }
+
+export default App;
