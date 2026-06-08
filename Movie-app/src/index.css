@@ -38,7 +38,7 @@ a {
 
 /* ===== NAVBAR ===== */
 .navbar {
-  background: rgba(0, 0, 0, 0.6) !important;
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -59,7 +59,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-6px) scale(1.02);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
 }
 
@@ -114,7 +114,9 @@ input.form-control:focus {
   row-gap: 20px;
 }
 
-/* ===== SMOOTH ANIMATION ===== */
-* {
+/* ===== TRANSITIONS (FIXED) ===== */
+.card,
+.btn,
+input {
   transition: all 0.2s ease;
 }

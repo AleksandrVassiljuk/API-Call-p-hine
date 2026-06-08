@@ -8,12 +8,23 @@ type Movie = {
   vote_average: number;
 };
 
+const IMG = "https://image.tmdb.org/t/p/w500";
+const FALLBACK_IMG = "https://via.placeholder.com/500x750";
+
 function Favorites() {
   const [favorites, setFavorites] = useState<Movie[]>([]);
 
-  useEffect(() => {
+  const loadFavorites = () => {
     const data = localStorage.getItem("favorites");
-    setFavorites(data ? JSON.parse(data) : []);
+    try {
+      setFavorites(data ? JSON.parse(data) : []);
+    } catch {
+      setFavorites([]);
+    }
+  };
+
+  useEffect(() => {
+    loadFavorites();
   }, []);
 
   const saveToStorage = (items: Movie[]) => {
@@ -83,55 +94,67 @@ function Favorites() {
       ) : (
         <div className="row">
 
-          {favorites.map((movie) => (
-            <div className="col-md-3 col-sm-6 mb-4" key={movie.id}>
+          {favorites.map((movie) => {
+            const imageUrl =
+              movie.poster_path
+                ? `${IMG}${movie.poster_path}`
+                : FALLBACK_IMG;
 
-              <div className="card h-100 shadow-sm">
+            const rating =
+              typeof movie.vote_average === "number"
+                ? movie.vote_average.toFixed(1)
+                : "N/A";
 
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  className="card-img-top"
-                  alt={movie.title}
-                />
+            return (
+              <div className="col-md-3 col-sm-6 mb-4" key={movie.id}>
 
-                <div className="card-body d-flex flex-column">
+                <div className="card h-100 shadow-sm">
 
-                  <h5 className="card-title text-truncate" title={movie.title}>
-                    {movie.title}
-                  </h5>
+                  <img
+                    src={imageUrl}
+                    className="card-img-top"
+                    alt={`${movie.title} poster`}
+                  />
 
-                  <p className="text-muted small mb-1">
-                    Saved from TMDb
-                  </p>
+                  <div className="card-body d-flex flex-column">
 
-                  <p className="text-warning mb-2">
-                    ⭐ {movie.vote_average?.toFixed(1) || "N/A"}
-                  </p>
+                    <h5 className="card-title text-truncate" title={movie.title}>
+                      {movie.title || "No title"}
+                    </h5>
 
-                  <div className="mt-auto d-flex gap-2">
+                    <p className="text-muted small mb-1">
+                      Saved from TMDb
+                    </p>
 
-                    <Link
-                      to={`/movie/${movie.id}`}
-                      className="btn btn-primary btn-sm flex-fill"
-                    >
-                      Details
-                    </Link>
+                    <p className="text-warning mb-2">
+                      ⭐ {rating}
+                    </p>
 
-                    <button
-                      className="btn btn-outline-danger btn-sm"
-                      onClick={() => removeFavorite(movie.id)}
-                    >
-                      Remove
-                    </button>
+                    <div className="mt-auto d-flex gap-2">
+
+                      <Link
+                        to={`/movie/${movie.id}`}
+                        className="btn btn-primary btn-sm flex-fill"
+                      >
+                        Details
+                      </Link>
+
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => removeFavorite(movie.id)}
+                      >
+                        Remove
+                      </button>
+
+                    </div>
 
                   </div>
 
                 </div>
 
               </div>
-
-            </div>
-          ))}
+            );
+          })}
 
         </div>
       )}

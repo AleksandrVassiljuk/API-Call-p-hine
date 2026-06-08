@@ -2,7 +2,7 @@ export type Movie = {
   id: number;
   title: string;
   poster_path: string | null;
-  vote_average: number;
+  vote_average: number | null;
   overview?: string;
   release_date?: string;
 };

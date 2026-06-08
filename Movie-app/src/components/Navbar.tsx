@@ -12,25 +12,34 @@ function Navbar() {
   const location = useLocation();
   const [favoritesCount, setFavoritesCount] = useState(0);
 
+  const updateFavorites = () => {
+    const favs: Movie[] = JSON.parse(
+      localStorage.getItem("favorites") || "[]"
+    );
+    setFavoritesCount(favs.length);
+  };
+
   useEffect(() => {
-    const updateCount = () => {
-      const favs: Movie[] = JSON.parse(
-        localStorage.getItem("favorites") || "[]"
-      );
-      setFavoritesCount(favs.length);
+    updateFavorites();
+
+    // kui localStorage muutub TEISES TABIS
+    window.addEventListener("storage", updateFavorites);
+
+    return () => {
+      window.removeEventListener("storage", updateFavorites);
     };
-
-    updateCount();
-    window.addEventListener("storage", updateCount);
-
-    return () => window.removeEventListener("storage", updateCount);
   }, []);
+
+  // 👉 kui lisad favorite samas appis, storage event EI tööta
+  // seega lisame "manual refresh hacki"
+  useEffect(() => {
+    updateFavorites();
+  }, [location]);
 
   const isActive = (path: string) => location.pathname === path;
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-
       <div className="container">
 
         {/* BRAND */}
@@ -38,7 +47,7 @@ function Navbar() {
           🎬 MovieApp
         </Link>
 
-        {/* MOBILE TOGGLE */}
+        {/* TOGGLER */}
         <button
           className="navbar-toggler"
           type="button"
@@ -59,9 +68,6 @@ function Navbar() {
                 to="/"
               >
                 🏠 Home
-                <small className="d-block text-muted">
-                  Popular movies
-                </small>
               </Link>
             </li>
 
@@ -71,9 +77,6 @@ function Navbar() {
                 to="/search"
               >
                 🔎 Search
-                <small className="d-block text-muted">
-                  Find movies fast
-                </small>
               </Link>
             </li>
 
@@ -82,10 +85,7 @@ function Navbar() {
                 className={`nav-link ${isActive("/favorites") ? "text-warning" : ""}`}
                 to="/favorites"
               >
-                ❤️ Favorites
-                <small className="d-block text-muted">
-                  Saved ({favoritesCount})
-                </small>
+                ❤️ Favorites ({favoritesCount})
               </Link>
             </li>
 

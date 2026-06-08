@@ -9,10 +9,11 @@ import Favorites from "./pages/Favorites";
 function App() {
   return (
     <BrowserRouter>
-      <div className="app-wrapper">
+      <div className="app-wrapper d-flex flex-column min-vh-100">
+
         <Navbar />
 
-        <main>
+        <main className="flex-grow-1">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
@@ -20,6 +21,7 @@ function App() {
             <Route path="/favorites" element={<Favorites />} />
           </Routes>
         </main>
+
       </div>
     </BrowserRouter>
   );

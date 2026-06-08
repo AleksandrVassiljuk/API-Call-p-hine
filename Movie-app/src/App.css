@@ -119,8 +119,3 @@ a {
 .row {
   row-gap: 20px;
 }
-
-/* ===== SMOOTH TRANSITIONS ===== */
-* {
-  transition: all 0.2s ease;
-}
